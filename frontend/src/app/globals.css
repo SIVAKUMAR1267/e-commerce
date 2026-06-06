@@ -1,0 +1,56 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700;900&display=swap');
+@import 'tailwindcss';
+
+@theme {
+  /* The Neo-Brutalist Palette */
+  --color-neo-bg: #FFFDF5;
+  --color-neo-accent: #FF6B6B;
+  --color-neo-secondary: #FFD93D;
+  --color-neo-muted: #C4B5FD;
+
+  /* The signature zero-blur hard shadows */
+  --shadow-neo-sm: 4px 4px 0px 0px #000;
+  --shadow-neo-md: 8px 8px 0px 0px #000;
+  --shadow-neo-lg: 12px 12px 0px 0px #000;
+  --shadow-neo-xl: 16px 16px 0px 0px #000;
+
+  /* Enforcing the geometric, quirky typography */
+  --font-sans: "Space Grotesk", sans-serif;
+}
+
+@layer base {
+  body {
+    background-color: var(--color-neo-bg);
+    color: #000;
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  ::selection {
+    background-color: var(--color-neo-secondary);
+    color: #000;
+  }
+
+  * {
+    border-color: #000000;
+  }
+}
+
+@layer utilities {
+  .text-stroke {
+    -webkit-text-stroke: 2px black;
+    color: transparent;
+  }
+  
+  .bg-halftone {
+    background-image: radial-gradient(#000 1.5px, transparent 1.5px);
+    background-size: 20px 20px;
+  }
+
+  .bg-grid-pattern {
+    background-size: 40px 40px;
+    background-image: 
+      linear-gradient(to right, rgba(0, 0, 0, 0.1) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(0, 0, 0, 0.1) 1px, transparent 1px);
+  }
+}
