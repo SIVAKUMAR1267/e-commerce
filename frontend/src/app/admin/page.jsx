@@ -1,18 +1,21 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link"; // ADDED: Missing Link import
 import axios from "axios";
 import { useAuthStore } from "@/store/authStore";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Trash2, Edit } from "lucide-react";
+import { Trash2, Edit, Package } from "lucide-react"; // ADDED: Missing Package icon
 
 export default function AdminDashboard() {
   const router = useRouter();
   const { userInfo, token } = useAuthStore();
+  
   const [isMounted, setIsMounted] = useState(false);
   const [products, setProducts] = useState([]);
+  const [orders, setOrders] = useState([]); // ADDED: Missing Orders state!
   const [editingId, setEditingId] = useState(null);
 
   const emptyForm = { name: "", brand: "", category: "", price: "", countInStock: "", image: "", description: "" };
@@ -28,6 +31,23 @@ export default function AdminDashboard() {
       fetchProducts();
     }
   }, [userInfo, router]);
+
+  // FIX: Admin needs to fetch ALL orders, not just "myorders"
+  useEffect(() => {
+    const fetchAllOrders = async () => {
+      try {
+        const { data } = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/orders`, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        setOrders(data);
+      } catch (error) {
+        console.error("Failed to fetch all orders");
+      }
+    };
+    if (token && userInfo?.role === "admin") fetchAllOrders();
+  }, [token, userInfo]);
+
+  if (!userInfo) return null;
 
   const fetchProducts = async () => {
     try {
@@ -51,18 +71,16 @@ export default function AdminDashboard() {
       const payload = { ...formData, price: Number(formData.price), countInStock: Number(formData.countInStock) };
 
       if (editingId) {
-        // UPDATE EXISTING PRODUCT
         await axios.put(`${process.env.NEXT_PUBLIC_API_URL}/products/${editingId}`, payload, config);
         setMessage({ type: "success", text: "PRODUCT UPDATED!" });
       } else {
-        // CREATE NEW PRODUCT
         await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/products`, payload, config);
         setMessage({ type: "success", text: "PRODUCT ADDED!" });
       }
 
       setFormData(emptyForm);
       setEditingId(null);
-      fetchProducts(); // Refresh the list below
+      fetchProducts(); 
     } catch (err) {
       setMessage({ type: "error", text: err.response?.data?.message || "Error saving product" });
     } finally {
@@ -76,7 +94,7 @@ export default function AdminDashboard() {
       try {
         const config = { headers: { Authorization: `Bearer ${token}` } };
         await axios.delete(`${process.env.NEXT_PUBLIC_API_URL}/products/${id}`, config);
-        fetchProducts(); // Refresh the list
+        fetchProducts();
       } catch (error) {
         alert("Failed to delete product");
       }
@@ -91,7 +109,7 @@ export default function AdminDashboard() {
       price: product.price, countInStock: product.countInStock,
       image: product.image, description: product.description
     });
-    window.scrollTo({ top: 0, behavior: 'smooth' }); // Scroll back up to the form
+    window.scrollTo({ top: 0, behavior: 'smooth' }); 
   };
 
   if (!isMounted || !userInfo || userInfo.role !== "admin") return null;
@@ -100,10 +118,47 @@ export default function AdminDashboard() {
     <div className="min-h-screen bg-neo-bg bg-halftone py-12 px-6">
       <div className="max-w-6xl mx-auto space-y-16">
         
-        {/* --- TOP: THE FORM --- */}
+        {/* --- TOP: ORDER FULFILLMENT --- */}
+        <div className="bg-neo-secondary border-8 border-black p-8 shadow-neo-md rotate-[1deg]">
+          <h2 className="text-3xl font-black uppercase border-b-4 border-black pb-4 mb-6 flex items-center gap-4">
+            <Package className="h-8 w-8 stroke-[3px]" /> Global Order Fulfillment
+          </h2>
+          
+          {orders.length === 0 ? (
+            <div className="bg-white border-4 border-black p-6 font-bold uppercase text-center">
+              No active manifests found.
+            </div>
+          ) : (
+            <div className="space-y-4">
+              {orders.map((order) => (
+                <div key={order._id} className="bg-white border-4 border-black p-4 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 shadow-neo-sm">
+                  <div>
+                    <p className="font-black uppercase tracking-tight">ID: {order._id}</p>
+                    <p className="font-bold text-sm text-black/70 uppercase">
+                      Placed: {new Date(order.createdAt).toLocaleDateString()} | Total: ${order.totalPrice.toFixed(2)} | User: {order.user?.name || 'Guest'}
+                    </p>
+                  </div>
+                  <div className="flex items-center gap-4 w-full md:w-auto">
+                    <span className={`px-3 py-1 font-black uppercase text-sm border-2 border-black ${
+                      order.status === 'Delivered' ? 'bg-green-400' : 
+                      order.status === 'Shipped' ? 'bg-neo-accent' : 'bg-neo-bg'
+                    }`}>
+                      {order.status || 'Processing'}
+                    </span>
+                    <Link href={`/order/${order._id}`} className="bg-black text-white px-6 py-2 font-black uppercase text-sm border-4 border-black hover:bg-white hover:text-black transition-colors text-center flex-grow md:flex-grow-0">
+                      View / Update
+                    </Link>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+        
+        {/* --- MIDDLE: THE PRODUCT FORM --- */}
         <div>
           <div className="inline-block bg-black text-white border-4 border-black px-6 py-2 mb-8 -rotate-1 shadow-neo-sm">
-            <h1 className="font-black text-2xl uppercase tracking-widest">Control Panel</h1>
+            <h1 className="font-black text-2xl uppercase tracking-widest">Hardware Control Panel</h1>
           </div>
 
           <Card className="rotate-1">

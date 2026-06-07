@@ -89,3 +89,41 @@ export const createCheckoutSession = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+// @desc    Get order by ID
+// @route   GET /api/orders/:id
+// @access  Private
+export const getOrderById = async (req, res) => {
+  const order = await Order.findById(req.params.id).populate('user', 'name email');
+
+  if (order) {
+    res.json(order);
+  } else {
+    res.status(404);
+    throw new Error('Order not found');
+  }
+};
+
+// @desc    Get all orders
+// @route   GET /api/orders
+// @access  Private/Admin
+export const getOrders = async (req, res) => {
+  const orders = await Order.find({}).populate('user', 'id name');
+  res.json(orders);
+};
+
+// @desc    Update order status to shipped/delivered
+// @route   PUT /api/orders/:id/status
+// @access  Private/Admin
+export const updateOrderStatus = async (req, res) => {
+  const order = await Order.findById(req.params.id);
+
+  if (order) {
+    order.status = req.body.status || order.status;
+    const updatedOrder = await order.save();
+    res.json(updatedOrder);
+  } else {
+    res.status(404);
+    throw new Error('Order not found');
+  }
+};
