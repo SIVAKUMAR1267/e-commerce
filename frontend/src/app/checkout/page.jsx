@@ -71,6 +71,7 @@ export default function CheckoutPage() {
         },
         config
       );
+      window.location.href = data.url;
 
       // 3. Redirect the browser directly to the secure Stripe portal
       window.location.href = data.url; 

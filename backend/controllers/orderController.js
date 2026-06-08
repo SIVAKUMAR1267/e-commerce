@@ -115,11 +115,22 @@ export const getOrders = async (req, res) => {
 // @desc    Update order status to shipped/delivered
 // @route   PUT /api/orders/:id/status
 // @access  Private/Admin
+// @desc    Update order status and location
+// @route   PUT /api/orders/:id/status
+// @access  Private/Admin
 export const updateOrderStatus = async (req, res) => {
   const order = await Order.findById(req.params.id);
 
   if (order) {
     order.status = req.body.status || order.status;
+    order.currentLocation = req.body.currentLocation || order.currentLocation;
+    
+    // Automatically flag as delivered if status matches
+    if (order.status === 'Delivered') {
+      order.isDelivered = true;
+      order.deliveredAt = Date.now();
+    }
+
     const updatedOrder = await order.save();
     res.json(updatedOrder);
   } else {

@@ -3,7 +3,8 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { useParams } from "next/navigation";
 import { useAuthStore } from "@/store/authStore";
-import { Package, Truck, CheckCircle, Clock } from "lucide-react";
+import { Package, Truck, CheckCircle, Clock, Box, MapPin, XCircle } from "lucide-react";
+import { Input } from "@/components/ui/input";
 
 export default function OrderTrackingPage() {
   const { id } = useParams();
@@ -30,12 +31,15 @@ export default function OrderTrackingPage() {
   if (loading) return <div className="p-12 text-2xl font-black uppercase text-center animate-pulse">Scanning Network...</div>;
   if (!order) return <div className="p-12 text-2xl font-black uppercase text-center">Order Not Found</div>;
 
-  const statusMap = {
-    Processing: { icon: Clock, color: "bg-neo-accent" },
-    Shipped: { icon: Truck, color: "bg-neo-secondary" },
-    Delivered: { icon: CheckCircle, color: "bg-green-400" },
-  };
-
+const statusMap = {
+  Pending: { icon: Clock, color: "bg-gray-300" },
+  Processing: { icon: Clock, color: "bg-neo-accent" },
+  Packed: { icon: Box, color: "bg-purple-400" },
+  Shipped: { icon: Truck, color: "bg-blue-400" },
+  'Out for Delivery': { icon: MapPin, color: "bg-yellow-400" },
+  Delivered: { icon: CheckCircle, color: "bg-green-400" },
+  Cancelled: { icon: XCircle, color: "bg-red-500 text-white" },
+};
   const CurrentIcon = statusMap[order.status || 'Processing'].icon;
 
   return (
@@ -57,9 +61,12 @@ export default function OrderTrackingPage() {
               </div>
               <div>
                 <h2 className="text-4xl font-black uppercase tracking-tighter">
-                  {order.status || 'Processing'}
-                </h2>
-                <p className="font-bold uppercase tracking-widest text-black/70">Current Location: Unknown</p>
+                    {order.status}
+                  </h2>
+                  <p className="font-bold uppercase tracking-widest text-black/70 mt-1">
+                    {/* The dynamic location renders here */}
+                    Current Location: <span className="text-black font-black">{order.currentLocation || 'SF, US'}</span>
+                  </p>
               </div>
             </div>
             <div className="bg-black text-white px-6 py-4 font-black text-2xl border-4 border-white shadow-neo-sm">

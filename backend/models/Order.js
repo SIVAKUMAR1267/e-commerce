@@ -18,6 +18,17 @@ const orderSchema = new mongoose.Schema(
       postalCode: { type: String, required: true },
       country: { type: String, required: true },
     },
+    status: {
+      type: String,
+      required: true,
+      enum: ['Pending', 'Processing', 'Packed', 'Shipped', 'Out for Delivery', 'Delivered', 'Cancelled'],
+      default: 'Processing',
+    },
+    currentLocation: {
+      type: String,
+      required: true,
+      default: 'SF, US', // Default starting location
+    },
     paymentMethod: { type: String, required: true },
     totalPrice: { type: Number, required: true, default: 0.0 },
     isPaid: { type: Boolean, required: true, default: false },

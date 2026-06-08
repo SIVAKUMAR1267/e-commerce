@@ -30,9 +30,16 @@ export default function ProfilePage() {
   // 1. Mount & Auth Check
   useEffect(() => {
     setIsMounted(true);
-    if (!userInfo) {
-      router.push("/login");
-    } else if (shippingAddress) {
+    
+    // Add a tiny delay so LocalStorage can hydrate into Zustand
+    const checkAuth = setTimeout(() => {
+      // Check the state directly after the delay
+      if (!useAuthStore.getState().userInfo) {
+        router.push("/login");
+      }
+    }, 150); // 150 milliseconds is invisible to the user but plenty of time for code
+
+    if (shippingAddress) {
       setFormData({
         address: shippingAddress.address || "",
         city: shippingAddress.city || "",
@@ -40,7 +47,9 @@ export default function ProfilePage() {
         country: shippingAddress.country || "",
       });
     }
-  }, [userInfo, router, shippingAddress]);
+
+    return () => clearTimeout(checkAuth); // Cleanup
+  }, [router, shippingAddress]);
 
   // 2. Fetch User's Order History
   useEffect(() => {
