@@ -1,6 +1,7 @@
 import "./globals.css";
 import CartDrawer from "@/components/CartDrawer";
 import NavbarWrapper from "@/components/NavbarWrapper";
+import Footer from "@/components/Footer";
 
 export const metadata = {
   title: "Neo-Brutalist Store",
@@ -16,6 +17,7 @@ export default function RootLayout({ children }) {
         <div className="flex-grow">
           {children}
         </div>
+        <Footer />
       </body>
     </html>
   );

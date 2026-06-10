@@ -13,6 +13,68 @@ import Pagination from "@/components/Pagination";
 export default function Home() {
   const router = useRouter();
 
+ // --- Hero Slider Matrix ---
+  const [currentSlide, setCurrentSlide] = useState(0);
+
+  const heroSlides = [
+    {
+      badge: "SYSTEM STABLE // DRIPPED LOUD",
+      title1: "UNFILTERED",
+      title2: "STREET",
+      titleAccent: "WEAR",
+      desc: "Raw structural honesty meets high-saturation energy. This catalog is built to break boundaries. Secure your haul below.",
+      bg: "bg-white",
+      text: "text-black",
+      stroke: "[-webkit-text-stroke:2px_black]",
+      accent: "bg-neo-accent text-black", 
+      boxBg: "bg-neo-secondary", 
+      icon: <Flame className="h-5 w-5 stroke-[3px]" />
+    },
+    {
+      badge: "GHOST PROTOCOL // OVERRIDE",
+      title1: "NIGHT",
+      title2: "OPERATOR",
+      titleAccent: "RIGS",
+      desc: "Stealth-oriented high-density outerwear. Pure structural infrastructure built for the urban grid.",
+      bg: "bg-black",
+      text: "text-white",
+      stroke: "[-webkit-text-stroke:2px_white]",
+      accent: "bg-purple-500 text-white",
+      boxBg: "bg-zinc-800",
+      icon: <Zap className="h-5 w-5 stroke-[3px] text-yellow-400" />
+    },
+    {
+      badge: "CLEARANCE EVENT // SEVERE DROP",
+      title1: "LIQUIDATING",
+      title2: "MANIFEST",
+      titleAccent: "SALE",
+      desc: "Prices crushed directly within the catalog nodes. Deploy promo codes immediately at checkout.",
+      bg: "bg-red-500",
+      text: "text-black",
+      stroke: "[-webkit-text-stroke:2px_black]",
+      accent: "bg-white text-black",
+      boxBg: "bg-black text-white",
+      icon: <Tag className="h-5 w-5 stroke-[3px]" />
+    }
+  ];
+  // --- Client-Safe Barcode State to prevent Hydration Mismatches ---
+  const [barcodeHeights, setBarcodeHeights] = useState([50, 70, 40, 85, 60, 45, 90, 55]);
+
+  useEffect(() => {
+    // This runs strictly on the client browser post-hydration
+    const randomHeights = [...Array(8)].map(() => Math.random() * (100 - 20) + 20);
+    setBarcodeHeights(randomHeights);
+  }, [currentSlide]); // Re-scrambles the barcode rows every time the slide shifts!
+  // Auto-scroll loop (6 seconds)
+  useEffect(() => {
+    const slideTimer = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % heroSlides.length);
+    }, 6000);
+    return () => clearInterval(slideTimer);
+  }, [heroSlides.length]);
+
+  const nextSlide = () => setCurrentSlide((prev) => (prev + 1) % heroSlides.length);
+  const prevSlide = () => setCurrentSlide((prev) => (prev - 1 + heroSlides.length) % heroSlides.length);
   // --- React State for Pagination ---
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -117,44 +179,91 @@ export default function Home() {
     <main className="min-h-screen bg-neo-bg bg-halftone pb-24 overflow-hidden">
       
       {/* 1. THE HERO ZONE */}
-      <section className="border-b-8 border-black bg-white relative py-20 px-6 sm:px-12">
-        <div className="absolute inset-0 bg-grid-pattern pointer-events-none opacity-40" />
-        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 items-center relative z-10">
-          <div className="lg:col-span-7 space-y-6">
-            <div className="inline-flex items-center gap-2 bg-neo-secondary border-4 border-black px-4 py-1.5 font-black uppercase text-sm tracking-widest shadow-neo-sm rotate-[-1deg]">
-              <Flame className="h-4 w-4 fill-black animate-pulse" /> SYSTEM STABLE // DRIPPED LOUD
+      {/* 1. THE HERO ZONE (NEO-BRUTALIST MULTI-SLIDE) */}
+      <section className={`relative border-b-8 border-black transition-colors duration-700 overflow-hidden ${heroSlides[currentSlide].bg} ${heroSlides[currentSlide].text}`}>
+        
+        {/* Abstract Grid Texture */}
+        <div className="absolute inset-0 bg-grid-pattern opacity-20 pointer-events-none mix-blend-overlay" />
+
+        {/* MANUAL ARROW TABS */}
+        <button 
+          onClick={prevSlide} 
+          className="absolute left-0 top-1/2 -translate-y-1/2 z-40 bg-white text-black border-y-4 border-r-4 border-black px-2 py-8 font-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:pr-4 hover:bg-neo-accent transition-all"
+        >
+          &lt;&lt;
+        </button>
+        <button 
+          onClick={nextSlide} 
+          className="absolute right-0 top-1/2 -translate-y-1/2 z-40 bg-white text-black border-y-4 border-l-4 border-black px-2 py-8 font-black shadow-[-4px_4px_0px_0px_rgba(0,0,0,1)] hover:pl-4 hover:bg-neo-accent transition-all"
+        >
+          &gt;&gt;
+        </button>
+
+        <div className="max-w-7xl mx-auto px-16 py-24 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center relative z-10 min-h-[550px]">
+          
+          {/* LEFT: HEAVY TYPOGRAPHY */}
+          <div key={currentSlide} className="space-y-8 animate-in fade-in slide-in-from-left-8 duration-500">
+            
+            <div className={`inline-flex items-center gap-3 bg-white text-black border-4 border-black px-4 py-2 font-black uppercase text-sm tracking-widest shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] -rotate-1`}>
+              {heroSlides[currentSlide].icon} {heroSlides[currentSlide].badge}
             </div>
-            <h1 className="text-6xl sm:text-8xl md:text-9xl font-black uppercase tracking-tighter leading-[0.85]">
-              UNFILTERED<br /><span className="text-stroke">STREET</span>
-              <span className="bg-neo-accent text-white px-4 inline-block rotate-1 shadow-neo-sm my-2 border-4 border-black">WEAR</span>
+
+            <h1 className="text-6xl sm:text-7xl lg:text-8xl font-black uppercase tracking-tighter leading-[0.85]">
+              {heroSlides[currentSlide].title1}<br />
+              <span className={`text-transparent ${heroSlides[currentSlide].stroke}`}>
+                {heroSlides[currentSlide].title2} 
+              </span><br />
+              <span className={`${heroSlides[currentSlide].accent} px-4 inline-block rotate-2 shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] mt-2 border-4 border-black`}>
+                {heroSlides[currentSlide].titleAccent}
+              </span>
             </h1>
-            <p className="text-xl font-bold max-w-xl leading-snug">
-              Raw structural honesty meets high-saturation energy. This isn't a generic catalog—it's built to break boundaries. Secure your haul below.
+
+            <p className="text-xl font-bold max-w-lg leading-snug bg-white/10 backdrop-blur-md p-4 border-l-8 border-current">
+              {heroSlides[currentSlide].desc}
             </p>
-            <div className="pt-4">
-              <Button size="lg" className="text-xl h-16 px-8 group rotate-[-1deg] hover:rotate-0" onClick={() => document.getElementById('catalog').scrollIntoView({ behavior: 'smooth' })}>
-                BROWSE COCKPIT <ArrowDown className="ml-2 h-6 w-6 stroke-[3px] group-hover:translate-y-1 transition-transform" />
-              </Button>
+
+            <Button 
+              size="lg" 
+              className="text-xl h-16 px-8 group rotate-[-1deg] hover:rotate-1 bg-black text-white hover:bg-white hover:text-black border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]" 
+              onClick={() => document.getElementById('catalog').scrollIntoView({ behavior: 'smooth' })}
+            >
+              BROWSE CATALOG <ArrowDown className="ml-2 h-6 w-6 stroke-[3px] group-hover:translate-y-2 transition-transform" />
+            </Button>
+          </div>
+
+          {/* RIGHT: ABSTRACT HARDWARE WIDGET (No Counters) */}
+          <div className="relative hidden lg:flex justify-end items-center h-full">
+            {/* The rotating background slab */}
+            <div className={`absolute w-72 h-72 border-8 border-black ${heroSlides[currentSlide].boxBg} shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] rotate-6 transition-colors duration-700`} />
+            
+            {/* The foreground terminal block */}
+            <div className="absolute w-64 h-64 border-8 border-black bg-white -rotate-3 p-6 flex flex-col justify-between shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
+              <div className="border-b-4 border-black pb-2 flex justify-between items-center text-black">
+                <span className="font-black tracking-widest uppercase text-sm">SYS_NODE_OK</span>
+                <div className="h-4 w-4 bg-red-500 rounded-full animate-ping" />
+              </div>
+              
+              {/* Dynamic Barcode Matrix */}
+              <div className="flex gap-2 h-20 w-full items-end mt-4">
+                {barcodeHeights.map((height, i) => (
+                  <div 
+                    key={i} 
+                    className="bg-black w-full" 
+                    style={{ 
+                      height: `${height}%`, // Fully client-stabilized calculations
+                      transition: 'height 0.5s ease-in-out'
+                    }} 
+                  />
+                ))}
+              </div>
+              
+              {/* Fake Version Numbering (Visual flair, not a slide counter) */}
+              <div className="text-4xl font-black uppercase text-black tracking-tighter text-right mt-4">
+                V.0{currentSlide + 1}
+              </div>
             </div>
           </div>
-          <div className="lg:col-span-5 relative hidden lg:block justify-self-center">
-            <div className="absolute inset-0 bg-neo-muted border-4 border-black translate-x-4 translate-y-4 shadow-neo-md" />
-            <div className="relative border-4 border-black bg-neo-secondary p-12 h-96 w-96 flex flex-col justify-between shadow-neo-sm rotate-2">
-              <div className="absolute -right-12 -top-12 border-4 border-black rounded-full h-32 w-32 bg-white flex items-center justify-center z-20 animate-[spin_8s_linear_infinite]">
-                <svg viewBox="0 0 100 100" className="w-full h-full">
-                  <path id="textPath" d="M 50, 50 m -32, 0 a 32,32 0 1,1 64,0 a 32,32 0 1,1 -64,0" fill="transparent" />
-                  <text className="font-black text-[12px] tracking-widest fill-black uppercase">
-                    <textPath href="#textPath" startOffset="0%">• RETRO • STYLE • SYSTEM •</textPath>
-                  </text>
-                </svg>
-              </div>
-              <Sparkles className="h-16 w-16 stroke-[3px]" />
-              <div>
-                <div className="text-6xl font-black tracking-tighter leading-none mb-2">40% OFF</div>
-                <div className="font-bold tracking-widest uppercase text-sm border-t-4 border-black pt-2">USE CODE: BRUTAL</div>
-              </div>
-            </div>
-          </div>
+
         </div>
       </section>
 
