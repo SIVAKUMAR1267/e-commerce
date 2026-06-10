@@ -7,6 +7,17 @@ import { useAuthStore } from "@/store/authStore";
 import { useCartStore } from "@/store/cartStore";
 import { useRouter } from "next/navigation";
 
+const isTokenExpired = (token) => {
+  if (!token) return true;
+  try {
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    // JWT expiry (exp) is in seconds, Date.now() is in milliseconds
+    return (payload.exp * 1000) < Date.now(); 
+  } catch (error) {
+    return true; // If the token is corrupted, treat it as expired
+  }
+};
+
 export default function Navbar() {
   const router = useRouter();
   const { userInfo, token, logout } = useAuthStore();
@@ -21,6 +32,19 @@ export default function Navbar() {
       loadUserCart(); // Instantly pull their saved data when they log in!
     }
   }, [token, loadUserCart]);
+  useEffect(() => {
+    if (token) {
+      // 1. Check if the token is dead
+      if (isTokenExpired(token)) {
+        console.log("Token expired. Logging user out.");
+        logout(); // Wipes their expired data from Zustand and LocalStorage
+        router.push("/login"); // Kicks them to the login screen
+      } else {
+        // 2. If the token is still alive, load their cart!
+        loadUserCart(); 
+      }
+    }
+  }, [token, loadUserCart, logout, router]);
 
   const Logout = () => {
     clearCart(); // Wipes the local browser so the next user sees a blank slate

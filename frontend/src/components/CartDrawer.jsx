@@ -16,10 +16,12 @@ export default function CartDrawer() {
 
   if (!isCartOpen) return null;
 
-  // 🔴 THE FIX: We calculate the total right here in the component. 
-  // Now, every time cartItems changes, the total recalculates INSTANTLY without a refresh!
-  const cartTotal = isMounted 
-    ? cartItems.reduce((acc, item) => acc + item.price * item.qty, 0).toFixed(2) 
+const cartTotal = isMounted 
+    ? cartItems.reduce((acc, item) => {
+        // Decide which price to use before multiplying by quantity
+        const activePrice = item.isSale ? item.salePrice : item.price;
+        return acc + (activePrice * item.qty);
+      }, 0).toFixed(2) 
     : "0.00";
 
   return (
@@ -86,7 +88,16 @@ export default function CartDrawer() {
                       </button>
                     </div>
 
-                    <span className="font-black text-xl">${(item.price * item.qty).toFixed(2)}</span>
+                    <div className="text-xl font-black">
+                      {item.isSale ? (
+                        <div className="flex flex-col">
+                          <span className="line-through text-black/40 text-sm">${item.price.toFixed(2)}</span>
+                          <span className="text-red-500">${item.salePrice.toFixed(2)}</span>
+                        </div>
+                      ) : (
+                        `$${item.price.toFixed(2)}`
+                      )}
+                    </div>
                   </div>
 
                 </div>

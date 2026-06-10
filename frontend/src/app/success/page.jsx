@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState, useRef } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation"; 
 import axios from "axios";
 import { useAuthStore } from "@/store/authStore";
 import { useCartStore } from "@/store/cartStore";
@@ -8,19 +8,22 @@ import { CheckCircle } from "lucide-react";
 
 export default function OrderSuccessPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const sessionId = searchParams.get("session_id"); 
+  
   const { token } = useAuthStore();
   const { cartItems, shippingAddress, clearCart } = useCartStore();
   
-  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
-  
-  // We use a ref to prevent React Strict Mode from firing this twice and creating 2 orders!
   const hasProcessed = useRef(false); 
 
   useEffect(() => {
     const saveOrderToDatabase = async () => {
-      // 1. If the cart is already empty, they probably refreshed the success page. 
-      // Send them to their profile so we don't create a blank duplicate order.
+      if (!sessionId) {
+        router.push("/");
+        return;
+      }
+
       if (cartItems.length === 0) {
         router.push("/profile");
         return;
@@ -30,46 +33,42 @@ export default function OrderSuccessPage() {
       hasProcessed.current = true;
 
       try {
-        // 2. Calculate the financial totals the database expects
-        const itemsPrice = cartItems.reduce((acc, item) => acc + item.price * item.qty, 0);
-        const shippingPrice = itemsPrice > 100 ? 0 : 10; // Free shipping over $100
-        const taxPrice = Number((0.15 * itemsPrice).toFixed(2)); // 15% tax example
-        const totalPrice = itemsPrice + shippingPrice + taxPrice;
+        const config = {
+          headers: { Authorization: `Bearer ${token}` },
+        };
 
-        // 3. Fire the payload to our existing POST /api/orders route!
-        const { data } = await axios.post(
+        const fallbackSubtotal = cartItems.reduce((acc, item) => acc + (item.isSale ? item.salePrice : item.price) * item.qty, 0);
+
+        // Submit the order payload and let the backend do the heavy lifting
+        const { data: createdOrder } = await axios.post(
           `${process.env.NEXT_PUBLIC_API_URL}/orders`,
           {
             orderItems: cartItems,
             shippingAddress,
             paymentMethod: "Stripe",
-            itemsPrice,
-            taxPrice,
-            shippingPrice,
-            totalPrice,
+            taxPrice: Number((0.15 * fallbackSubtotal).toFixed(2)), 
+            shippingPrice: fallbackSubtotal > 100 ? 0 : 10,
+            stripeSessionId: sessionId, // <-- Pass the session token directly here!
           },
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          }
+          config
         );
 
-        // 4. Success! Clear their local browser cart so they don't buy it again
+        // Clear client side Zustand / Local Storage instantly
         clearCart();
 
-        // 5. Instantly bounce them to their new live tracking page
-        router.push(`/order/${data._id}`);
+        // Bounce directly to the new order route tracking panel
+        router.push(`/order/${createdOrder._id}`);
 
       } catch (err) {
         console.error("Failed to save order to database", err);
         setError(true);
-        setLoading(false);
       }
     };
 
-    if (token) {
+    if (token && sessionId && cartItems.length > 0) {
       saveOrderToDatabase();
     }
-  }, [cartItems, shippingAddress, token, router, clearCart]);
+  }, [cartItems, shippingAddress, token, sessionId, router, clearCart]);
 
   if (error) {
     return (

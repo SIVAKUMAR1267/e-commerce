@@ -45,7 +45,10 @@ export default function CheckoutPage() {
   // 3. Show nothing (or a loading spinner) while it figures out who you are
   if (!isMounted) return null;
 
-  const cartTotal = cartItems.reduce((acc, item) => acc + item.price * item.qty, 0).toFixed(2);
+const cartTotal = cartItems.reduce((acc, item) => {
+    const activePrice = item.isSale ? item.salePrice : item.price;
+    return acc + (activePrice * item.qty);
+  }, 0).toFixed(2);
 
   const submitHandler = async (e) => {
     e.preventDefault();
@@ -139,14 +142,19 @@ export default function CheckoutPage() {
                 <CardTitle className="text-xl">SUMMARY</CardTitle>
               </CardHeader>
               <CardContent className="p-6 bg-white space-y-4">
-                {cartItems.map((item) => (
-                  <div key={item._id} className="flex justify-between items-center border-b-2 border-black pb-2">
-                    <span className="font-bold uppercase text-sm truncate pr-2">
-                      {item.qty}x {item.name}
-                    </span>
-                    <span className="font-black">${(item.price * item.qty).toFixed(2)}</span>
-                  </div>
-                ))}
+                {cartItems.map((item) => {
+                  // Determine the active price for this specific item
+                  const activePrice = item.isSale ? item.salePrice : item.price;
+                  
+                  return (
+                    <div key={item._id} className="flex justify-between items-center border-b-2 border-black pb-2">
+                      <span className="font-bold uppercase text-sm truncate pr-2">
+                        {item.qty}x {item.name}
+                      </span>
+                      <span className="font-black">${(activePrice * item.qty).toFixed(2)}</span>
+                    </div>
+                  );
+                })}
                 <div className="flex justify-between items-center pt-4">
                   <span className="font-black uppercase text-xl">TOTAL:</span>
                   <span className="font-black text-3xl text-neo-accent">${cartTotal}</span>

@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 
 const productSchema = new mongoose.Schema(
   {
-    user: { type: mongoose.Schema.Types.ObjectId, required: true, ref: 'User' }, // Admin who created it
+    user: { type: mongoose.Schema.Types.ObjectId, required: true, ref: 'User' },
     name: { type: String, required: true },
     image: { type: String, required: true },
     brand: { type: String, required: true },
@@ -10,6 +10,10 @@ const productSchema = new mongoose.Schema(
     description: { type: String, required: true },
     price: { type: Number, required: true, default: 0 },
     countInStock: { type: Number, required: true, default: 0 },
+    soldCount: { type: Number, default: 0 },
+    // --- ADD THESE TWO LINES ---
+    isSale: { type: Boolean, default: false },
+    salePrice: { type: Number, default: 0 },
   },
   { timestamps: true }
 );

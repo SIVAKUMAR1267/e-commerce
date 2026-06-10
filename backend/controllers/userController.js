@@ -37,6 +37,7 @@ export const registerUser = async (req, res) => {
       email: user.email,
       role: user.role,
       token: generateToken(user._id),
+
     });
   } else {
     res.status(400).json({ message: 'Invalid user data' });
@@ -59,15 +60,21 @@ export const getUserData = async (req, res) => {
 // @route   POST /api/users/sync
 // @access  Private
 export const syncUserData = async (req, res) => {
-  const user = await User.findById(req.user._id);
-  if (user) {
-    user.cartItems = req.body.cartItems || user.cartItems;
-    user.shippingAddress = req.body.shippingAddress || user.shippingAddress;
-    await user.save();
-    res.json({ message: 'Data safely synced to database' });
-  } else {
-    res.status(404);
-    throw new Error('User not found');
+  try {
+    // ATOMIC FIX: Update the cart directly in the DB instead of fetching and calling .save()
+    const updatedUser = await User.findByIdAndUpdate(
+      req.user._id,
+      { $set: { cartItems: req.body.cartItems } }, // Atomic replacement of the array
+      { new: true, runValidators: true } // Returns the newly updated document
+    );
+
+    if (!updatedUser) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    res.status(200).json(updatedUser);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
   }
 };
 // @desc    Get user profile

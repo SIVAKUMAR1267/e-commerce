@@ -107,12 +107,6 @@ export default function ProfilePage() {
                   <label className="font-bold text-black/60 uppercase text-xs tracking-widest">Comms Link</label>
                   <p className="font-bold text-lg truncate">{userInfo.email}</p>
                 </div>
-                <div>
-                  <label className="font-bold text-black/60 uppercase text-xs tracking-widest">Clearance</label>
-                  <p className="font-black text-lg uppercase px-2 py-1 bg-black text-white inline-block mt-1">
-                    {userInfo.role}
-                  </p>
-                </div>
               </CardContent>
             </Card>
           </div>
@@ -149,9 +143,12 @@ export default function ProfilePage() {
                     <label className="font-bold uppercase tracking-widest text-sm">Country</label>
                     <Input name="country" value={formData.country} onChange={handleChange} placeholder="UNITED STATES" required />
                   </div>
-                  <Button type="submit" className="w-full text-xl h-16 mt-4 shadow-neo-sm">
-                    UPDATE DESTINATION PROTOCOL
-                  </Button>
+                  <button 
+                    type="submit" 
+                    className="w-full bg-neo-accent text-white px-4 py-3 md:px-6 md:py-4 font-black uppercase border-4 border-black shadow-neo-sm hover:-translate-y-1 hover:shadow-neo-md transition-all text-sm sm:text-base md:text-xl"
+                  >
+                    Update Destination Protocol
+                  </button>
                 </form>
               </CardContent>
             </Card>
