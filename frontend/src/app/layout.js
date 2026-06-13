@@ -4,7 +4,7 @@ import NavbarWrapper from "@/components/NavbarWrapper";
 import Footer from "@/components/Footer";
 
 export const metadata = {
-  title: "Neo-Brutalist Store",
+  title: "SHOP CARTEL",
   description: "A loud and unapologetic e-commerce experience.",
 };
 
