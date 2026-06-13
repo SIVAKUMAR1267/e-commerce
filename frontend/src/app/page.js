@@ -57,15 +57,7 @@ export default function Home() {
       icon: <Tag className="h-5 w-5 stroke-[3px]" />
     }
   ];
-  // --- Client-Safe Barcode State to prevent Hydration Mismatches ---
-  const [barcodeHeights, setBarcodeHeights] = useState([50, 70, 40, 85, 60, 45, 90, 55]);
 
-  useEffect(() => {
-    // This runs strictly on the client browser post-hydration
-    const randomHeights = [...Array(8)].map(() => Math.random() * (100 - 20) + 20);
-    setBarcodeHeights(randomHeights);
-  }, [currentSlide]); // Re-scrambles the barcode rows every time the slide shifts!
-  // Auto-scroll loop (6 seconds)
   useEffect(() => {
     const slideTimer = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % heroSlides.length);
@@ -137,37 +129,39 @@ export default function Home() {
     
   }, [currentPage, debouncedSearch, selectedCategory, initialBoot]); 
 
-  // Helper function to render product cards and keep code DRY
+// Responsive Product Card (Scales down cleanly on mobile for 2 columns)
   const renderProductCard = (product, i) => (
-    <div key={product._id} className="relative group min-w-[280px] sm:min-w-0">
+    <div key={product._id} className="relative group w-full">
       <Link href={`/product/${product._id}`} className="block">
         <Card hoverLift className={i % 2 === 0 ? "rotate-[0.5deg]" : "-rotate-[0.5deg]"}>
-          <div className="relative w-full h-64 border-b-4 border-black bg-white overflow-hidden">
+          {/* Shrink image height specifically for mobile */}
+          <div className="relative w-full h-36 sm:h-64 border-b-2 sm:border-b-4 border-black bg-white overflow-hidden">
             <img src={product.image} alt={product.name} className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" />
-            <div className="absolute top-4 right-4 bg-neo-secondary border-4 border-black px-2 py-1 font-black text-xs uppercase shadow-neo-sm">
+            <div className="absolute top-2 right-2 sm:top-4 sm:right-4 bg-neo-secondary border-2 sm:border-4 border-black px-1.5 py-0.5 sm:px-2 sm:py-1 font-black text-[9px] sm:text-xs uppercase shadow-neo-sm">
               {product.category}
             </div>
             {product.isSale && (
-               <div className="absolute top-4 left-4 bg-red-500 text-white border-4 border-black px-2 py-1 font-black text-xs uppercase shadow-neo-sm animate-pulse">
-               SALE
-             </div>
+               <div className="absolute top-2 left-2 sm:top-4 sm:left-4 bg-red-500 text-white border-2 sm:border-4 border-black px-1.5 py-0.5 sm:px-2 sm:py-1 font-black text-[9px] sm:text-xs uppercase shadow-neo-sm animate-pulse">
+                 SALE
+               </div>
             )}
           </div>
-          <CardContent className="pt-6">
-            <h2 className="text-xl font-black uppercase tracking-tight leading-tight mb-1 truncate">{product.name}</h2>
-            <p className="font-bold text-black/60 uppercase text-xs tracking-widest mb-4">{product.brand}</p>
-            <div className="text-2xl font-black tracking-tighter">
+          {/* Card padding and text shrinks on mobile to prevent ugly text wrapping */}
+          <CardContent className="p-2 sm:p-6">
+            <h2 className="text-xs sm:text-xl font-black uppercase tracking-tight leading-tight mb-1 truncate">{product.name}</h2>
+            <p className="font-bold text-black/60 uppercase text-[9px] sm:text-xs tracking-widest mb-2 sm:mb-4">{product.brand}</p>
+            <div className="text-sm sm:text-2xl font-black tracking-tighter">
               {product.isSale ? (
-                <>
-                  <span className="line-through text-black/40 mr-2">${product.price.toFixed(2)}</span>
+                <div className="flex flex-col xl:flex-row xl:items-center xl:gap-2">
+                  <span className="line-through text-black/40 text-[10px] sm:text-base">${product.price.toFixed(2)}</span>
                   <span className="text-red-500">${product.salePrice?.toFixed(2) || (product.price * 0.8).toFixed(2)}</span>
-                </>
+                </div>
               ) : (
                 `$${product.price.toFixed(2)}`
               )}
             </div>
           </CardContent>
-          <CardFooter className="pb-6 relative z-20">
+          <CardFooter className="pb-2 px-2 sm:pb-6 sm:px-6 relative z-20">
             <AddToCartButton product={product} showQty={false} />
           </CardFooter>
         </Card>
@@ -178,89 +172,87 @@ export default function Home() {
   return (
     <main className="min-h-screen bg-neo-bg bg-halftone pb-24 overflow-hidden">
       
-      {/* 1. THE HERO ZONE */}
-      {/* 1. THE HERO ZONE (NEO-BRUTALIST MULTI-SLIDE) */}
+     {/* 1. THE HERO ZONE (MOBILE STACKED OPTIMIZED) */}
       <section className={`relative border-b-8 border-black transition-colors duration-700 overflow-hidden ${heroSlides[currentSlide].bg} ${heroSlides[currentSlide].text}`}>
         
-        {/* Abstract Grid Texture */}
         <div className="absolute inset-0 bg-grid-pattern opacity-20 pointer-events-none mix-blend-overlay" />
 
-        {/* MANUAL ARROW TABS */}
-        <button 
-          onClick={prevSlide} 
-          className="absolute left-0 top-1/2 -translate-y-1/2 z-40 bg-white text-black border-y-4 border-r-4 border-black px-2 py-8 font-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:pr-4 hover:bg-neo-accent transition-all"
-        >
+        {/* MANUAL ARROWS */}
+        {/* MANUAL ARROWS (Hidden on mobile to prevent viewport blowout) */}
+        <button onClick={prevSlide} className="hidden lg:block absolute left-0 top-1/2 -translate-y-1/2 z-40 bg-white text-black border-y-4 border-r-4 border-black px-1 py-6 sm:px-2 sm:py-8 font-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:pr-4 hover:bg-neo-accent transition-all text-xs sm:text-base">
           &lt;&lt;
         </button>
-        <button 
-          onClick={nextSlide} 
-          className="absolute right-0 top-1/2 -translate-y-1/2 z-40 bg-white text-black border-y-4 border-l-4 border-black px-2 py-8 font-black shadow-[-4px_4px_0px_0px_rgba(0,0,0,1)] hover:pl-4 hover:bg-neo-accent transition-all"
-        >
+        <button onClick={nextSlide} className="hidden lg:block absolute right-0 top-1/2 -translate-y-1/2 z-40 bg-white text-black border-y-4 border-l-4 border-black px-1 py-6 sm:px-2 sm:py-8 font-black shadow-[-4px_4px_0px_0px_rgba(0,0,0,1)] hover:pl-4 hover:bg-neo-accent transition-all text-xs sm:text-base">
           &gt;&gt;
         </button>
 
-        <div className="max-w-7xl mx-auto px-16 py-24 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center relative z-10 min-h-[550px]">
+        {/* FLEX-COL ON MOBILE, FLEX-ROW ON DESKTOP, INCREASED PADDING */}
+        <div className="max-w-7xl mx-auto px-12 sm:px-16 lg:px-24 py-16 lg:py-24 flex flex-col lg:flex-row items-center gap-12 lg:gap-16 relative z-10 min-h-[550px]">
           
-          {/* LEFT: HEAVY TYPOGRAPHY */}
-          <div key={currentSlide} className="space-y-8 animate-in fade-in slide-in-from-left-8 duration-500">
+          {/* LEFT: HEAVY TYPOGRAPHY (Now takes full width on mobile) */}
+          <div key={currentSlide} className="w-full lg:w-1/2 space-y-6 lg:space-y-8 animate-in fade-in slide-in-from-left-8 duration-500">
             
-            <div className={`inline-flex items-center gap-3 bg-white text-black border-4 border-black px-4 py-2 font-black uppercase text-sm tracking-widest shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] -rotate-1`}>
+            <div className={`inline-flex items-center gap-2 bg-white text-black border-2 sm:border-4 border-black px-3 py-1.5 sm:px-4 sm:py-2 font-black uppercase text-xs sm:text-sm tracking-widest shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] -rotate-1`}>
               {heroSlides[currentSlide].icon} {heroSlides[currentSlide].badge}
             </div>
 
-            <h1 className="text-6xl sm:text-7xl lg:text-8xl font-black uppercase tracking-tighter leading-[0.85]">
+            <h1 className="text-5xl sm:text-6xl lg:text-7xl xl:text-8xl font-black uppercase tracking-tighter leading-[0.85]">
               {heroSlides[currentSlide].title1}<br />
               <span className={`text-transparent ${heroSlides[currentSlide].stroke}`}>
                 {heroSlides[currentSlide].title2} 
               </span><br />
-              <span className={`${heroSlides[currentSlide].accent} px-4 inline-block rotate-2 shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] mt-2 border-4 border-black`}>
+              <span className={`${heroSlides[currentSlide].accent} px-3 sm:px-4 inline-block rotate-2 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] sm:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] mt-2 border-2 sm:border-4 border-black`}>
                 {heroSlides[currentSlide].titleAccent}
               </span>
             </h1>
 
-            <p className="text-xl font-bold max-w-lg leading-snug bg-white/10 backdrop-blur-md p-4 border-l-8 border-current">
+            <p className="text-base sm:text-xl font-bold max-w-lg leading-snug bg-white/10 backdrop-blur-md p-3 sm:p-4 border-l-4 sm:border-l-8 border-current">
               {heroSlides[currentSlide].desc}
             </p>
 
             <Button 
               size="lg" 
-              className="text-xl h-16 px-8 group rotate-[-1deg] hover:rotate-1 bg-black text-white hover:bg-white hover:text-black border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]" 
+              className="text-base sm:text-xl h-14 sm:h-16 px-6 sm:px-8 group rotate-[-1deg] hover:rotate-1 bg-black text-white hover:bg-white hover:text-black border-2 sm:border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] w-full sm:w-auto" 
               onClick={() => document.getElementById('catalog').scrollIntoView({ behavior: 'smooth' })}
             >
-              BROWSE CATALOG <ArrowDown className="ml-2 h-6 w-6 stroke-[3px] group-hover:translate-y-2 transition-transform" />
+              INITIATE <ArrowDown className="ml-2 h-5 w-5 sm:h-6 sm:w-6 stroke-[3px] group-hover:translate-y-2 transition-transform" />
             </Button>
           </div>
 
-          {/* RIGHT: ABSTRACT HARDWARE WIDGET (No Counters) */}
-          <div className="relative hidden lg:flex justify-end items-center h-full">
-            {/* The rotating background slab */}
-            <div className={`absolute w-72 h-72 border-8 border-black ${heroSlides[currentSlide].boxBg} shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] rotate-6 transition-colors duration-700`} />
+          {/* RIGHT: THE DISCOUNT TICKET (Now naturally stacked on mobile instead of absolute) */}
+          <div className="relative flex justify-center lg:justify-end items-center w-full max-w-sm lg:w-1/2 mx-auto lg:ml-auto z-20 mt-4 lg:mt-0">
             
-            {/* The foreground terminal block */}
-            <div className="absolute w-64 h-64 border-8 border-black bg-white -rotate-3 p-6 flex flex-col justify-between shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
-              <div className="border-b-4 border-black pb-2 flex justify-between items-center text-black">
-                <span className="font-black tracking-widest uppercase text-sm">SYS_NODE_OK</span>
-                <div className="h-4 w-4 bg-red-500 rounded-full animate-ping" />
+            <div className={`absolute inset-0 border-8 border-black ${heroSlides[currentSlide].boxBg} shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] rotate-3 transition-colors duration-700`} />
+            
+            <div className="relative w-full border-8 border-black bg-white -rotate-1 p-6 sm:p-8 flex flex-col shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] text-black gap-6">
+              
+              <div className="border-b-4 border-black pb-3 flex justify-between items-center">
+                <span className="font-black tracking-widest uppercase text-sm sm:text-base">SYS_OFFER</span>
+                <div className="flex items-center gap-2">
+                  <span className="font-bold text-[10px] uppercase text-red-500 tracking-widest hidden sm:block">Live</span>
+                  <div className="relative flex h-3 w-3">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                    <span className="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span>
+                  </div>
+                </div>
               </div>
               
-              {/* Dynamic Barcode Matrix */}
-              <div className="flex gap-2 h-20 w-full items-end mt-4">
-                {barcodeHeights.map((height, i) => (
-                  <div 
-                    key={i} 
-                    className="bg-black w-full" 
-                    style={{ 
-                      height: `${height}%`, // Fully client-stabilized calculations
-                      transition: 'height 0.5s ease-in-out'
-                    }} 
-                  />
-                ))}
+              <div className="text-center py-2 sm:py-4">
+                <div className="text-7xl sm:text-8xl font-black tracking-tighter leading-none mb-2">
+                  40%
+                </div>
+                <div className="text-xl sm:text-2xl font-black tracking-widest uppercase bg-black text-white inline-block px-4 py-1 -rotate-2 border-2 border-transparent">
+                  OFF HAUL
+                </div>
               </div>
               
-              {/* Fake Version Numbering (Visual flair, not a slide counter) */}
-              <div className="text-4xl font-black uppercase text-black tracking-tighter text-right mt-4">
-                V.0{currentSlide + 1}
+              <div className="bg-neo-accent border-4 border-black p-4 text-center shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] transition-all cursor-pointer group">
+                <span className="font-bold text-xs sm:text-sm uppercase block leading-none mb-2 text-black/80">Use Code at Checkout</span>
+                <span className="font-black text-2xl sm:text-3xl uppercase tracking-widest leading-none group-active:scale-95 transition-transform inline-block">
+                  BRUTAL
+                </span>
               </div>
+
             </div>
           </div>
 
@@ -298,10 +290,9 @@ export default function Home() {
               View All
             </Link>
           </div>
-          <div className="flex overflow-x-auto snap-x snap-mandatory gap-8 pb-4 brutal-scroll">
-            {/* FIXED: Using 'trending' state instead of 'trendingProducts' */}
+          <div className="flex overflow-x-auto snap-x snap-mandatory gap-3 sm:gap-8 pb-4 brutal-scroll">
             {trending.map((item, i) => (
-              <div key={item._id} className="snap-start shrink-0 w-80">
+              <div key={item._id} className="snap-start shrink-0 w-40 sm:w-80">
                 {renderProductCard(item, i)}
               </div>
             ))}
@@ -325,9 +316,9 @@ export default function Home() {
                 View All
               </Link>
             </div>
-            <div className="flex overflow-x-auto snap-x snap-mandatory gap-8 pb-8 brutal-scroll">
+            <div className="flex overflow-x-auto snap-x snap-mandatory gap-3 sm:gap-8 pb-8 brutal-scroll">
               {sale.map((product, i) => (
-                <div key={product._id} className="snap-start shrink-0 w-80">
+                <div key={product._id} className="snap-start shrink-0 w-40 sm:w-80">
                   {renderProductCard(product, i)}
                 </div>
               ))}
@@ -378,7 +369,7 @@ export default function Home() {
             </div>
           ) : (
             <>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-8">
                 {products.map((product, i) => renderProductCard(product, i))}
               </div>
 

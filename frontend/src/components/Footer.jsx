@@ -61,8 +61,11 @@ export default function Footer() {
             </h4>
             <ul className="space-y-3 font-bold uppercase text-sm">
               <li><Link href="/profile" className="hover:bg-neo-accent hover:pl-2 transition-all">User Uplink</Link></li>
-              <li><a href="#" className="hover:bg-neo-accent hover:pl-2 transition-all">Stripe Verification</a></li>
-              <li><a href="#" className="hover:bg-neo-accent hover:pl-2 transition-all">Support Terminal</a></li>
+              <li><Link href="/privacy" className="hover:bg-neo-accent hover:pl-2 transition-all">Privacy Protocol</Link></li>
+              
+              {/* FIX: Link to your new Support page here */}
+              <li><Link href="/support" className="hover:bg-neo-accent hover:pl-2 transition-all">Support Terminal</Link></li>
+              
             </ul>
           </div>
 
@@ -85,8 +88,7 @@ export default function Footer() {
             © {new Date().getFullYear()} SHOP CARTEL INC. // V4.0
           </div>
           <div className="flex gap-8 text-white/50">
-            <a href="#" className="hover:text-neo-accent transition-colors">PRIVACY_PROTOCOL</a>
-            <a href="#" className="hover:text-neo-accent transition-colors">TERMS_OF_ENGAGEMENT</a>
+            <Link href="/privacy" className="hover:text-neo-accent transition-colors">PRIVACY_PROTOCOL</Link>
           </div>
         </div>
       </div>

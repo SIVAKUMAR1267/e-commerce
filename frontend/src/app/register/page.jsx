@@ -15,6 +15,7 @@ export default function RegisterPage() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [agreedToPrivacy, setAgreedToPrivacy] = useState(false);
   
   const router = useRouter();
   const login = useAuthStore((state) => state.login); // We log them in immediately after registering
@@ -110,10 +111,34 @@ export default function RegisterPage() {
                   required
                 />
               </div>
+              {/* PRIVACY CONSENT CHECKBOX */}
+          <div className="flex items-start gap-4 border-4 border-black p-4 bg-neo-muted my-6">
+            <div className="relative flex items-center justify-center mt-1">
+              <input 
+                type="checkbox" 
+                id="privacy" 
+                checked={agreedToPrivacy}
+                onChange={(e) => setAgreedToPrivacy(e.target.checked)}
+                className="peer appearance-none w-6 h-6 border-4 border-black bg-white checked:bg-black transition-colors cursor-pointer shrink-0" 
+                required 
+              />
+              {/* Custom Checkmark for Brutalist Style */}
+              <svg className="absolute w-4 h-4 text-white pointer-events-none opacity-0 peer-checked:opacity-100" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="4">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+              </svg>
+            </div>
+            <label htmlFor="privacy" className="font-bold text-sm sm:text-base uppercase leading-tight cursor-pointer">
+              I ACKNOWLEDGE AND AGREE TO THE <Link href="/privacy" className="text-neo-accent underline hover:text-black">PRIVACY PROTOCOL</Link> AND DATA HANDLING PARAMETERS.
+            </label>
+          </div>
 
-              <Button type="submit" className="w-full text-lg h-14 mt-6" disabled={loading}>
-                {loading ? "PROCESSING..." : "CREATE ACCOUNT"}
-              </Button>
+              <Button 
+            type="submit" 
+            className="w-full text-xl h-16 shadow-neo-sm" 
+            disabled={loading || !agreedToPrivacy} // <--- Add !agreedToPrivacy here
+          >
+            {loading ? "INITIALIZING..." : "REGISTER TERMINAL"}
+          </Button>
             </form>
 
             <div className="mt-8 pt-6 border-t-4 border-black text-center">
