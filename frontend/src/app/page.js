@@ -187,26 +187,25 @@ export default function Home() {
         </button>
 
         {/* FLEX-COL ON MOBILE, FLEX-ROW ON DESKTOP, INCREASED PADDING */}
-        <div className="max-w-7xl mx-auto px-12 sm:px-16 lg:px-24 py-16 lg:py-24 flex flex-col lg:flex-row items-center gap-12 lg:gap-16 relative z-10 min-h-[550px]">
+       <div className="max-w-7xl mx-auto px-4 sm:px-16 lg:px-24 py-6 sm:py-16 lg:py-24 flex flex-col lg:flex-row items-center gap-6 lg:gap-16 relative z-10">
           
-          {/* LEFT: HEAVY TYPOGRAPHY (Now takes full width on mobile) */}
-          <div key={currentSlide} className="w-full lg:w-1/2 space-y-6 lg:space-y-8 animate-in fade-in slide-in-from-left-8 duration-500">
-            
+          <div key={currentSlide} className="w-full lg:w-1/2 space-y-4 sm:space-y-8 animate-in fade-in slide-in-from-left-8 duration-500">
+
             <div className={`inline-flex items-center gap-2 bg-white text-black border-2 sm:border-4 border-black px-3 py-1.5 sm:px-4 sm:py-2 font-black uppercase text-xs sm:text-sm tracking-widest shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] -rotate-1`}>
               {heroSlides[currentSlide].icon} {heroSlides[currentSlide].badge}
             </div>
 
-            <h1 className="text-5xl sm:text-6xl lg:text-7xl xl:text-8xl font-black uppercase tracking-tighter leading-[0.85]">
+            <h1 className="text-4xl sm:text-6xl lg:text-7xl xl:text-8xl font-black uppercase tracking-tighter leading-[0.85]">
               {heroSlides[currentSlide].title1}<br />
               <span className={`text-transparent ${heroSlides[currentSlide].stroke}`}>
                 {heroSlides[currentSlide].title2} 
               </span><br />
-              <span className={`${heroSlides[currentSlide].accent} px-3 sm:px-4 inline-block rotate-2 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] sm:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] mt-2 border-2 sm:border-4 border-black`}>
+              <span className={`${heroSlides[currentSlide].accent} px-2 sm:px-4 inline-block rotate-2 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] sm:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] mt-2 border-2 sm:border-4 border-black text-3xl sm:text-6xl lg:text-7xl`}>
                 {heroSlides[currentSlide].titleAccent}
               </span>
             </h1>
 
-            <p className="text-base sm:text-xl font-bold max-w-lg leading-snug bg-white/10 backdrop-blur-md p-3 sm:p-4 border-l-4 sm:border-l-8 border-current">
+            <p className="text-xs sm:text-xl font-bold w-full lg:max-w-lg leading-snug bg-white/10 backdrop-blur-md p-2 sm:p-4 border-l-[3px] sm:border-l-8 border-current">
               {heroSlides[currentSlide].desc}
             </p>
 
@@ -220,11 +219,11 @@ export default function Home() {
           </div>
 
           {/* RIGHT: THE DISCOUNT TICKET (Now naturally stacked on mobile instead of absolute) */}
-          <div className="relative flex justify-center lg:justify-end items-center w-full max-w-sm lg:w-1/2 mx-auto lg:ml-auto z-20 mt-4 lg:mt-0">
+         <div className="relative flex justify-center lg:justify-end items-center w-[95%] sm:max-w-sm lg:max-w-none lg:w-1/2 mx-auto lg:ml-auto z-20 mt-2 sm:mt-6 lg:mt-0">
             
             <div className={`absolute inset-0 border-8 border-black ${heroSlides[currentSlide].boxBg} shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] rotate-3 transition-colors duration-700`} />
             
-            <div className="relative w-full border-8 border-black bg-white -rotate-1 p-6 sm:p-8 flex flex-col shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] text-black gap-6">
+            <div className="relative w-full border-[3px] sm:border-8 border-black bg-white -rotate-1 p-3 sm:p-8 flex flex-col shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] sm:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] text-black gap-3 sm:gap-6">
               
               <div className="border-b-4 border-black pb-3 flex justify-between items-center">
                 <span className="font-black tracking-widest uppercase text-sm sm:text-base">SYS_OFFER</span>
@@ -237,11 +236,11 @@ export default function Home() {
                 </div>
               </div>
               
-              <div className="text-center py-2 sm:py-4">
-                <div className="text-7xl sm:text-8xl font-black tracking-tighter leading-none mb-2">
+              <div className="text-center py-1 sm:py-4">
+                <div className="text-6xl sm:text-8xl font-black tracking-tighter leading-none mb-1">
                   40%
                 </div>
-                <div className="text-xl sm:text-2xl font-black tracking-widest uppercase bg-black text-white inline-block px-4 py-1 -rotate-2 border-2 border-transparent">
+                <div className="text-sm sm:text-2xl font-black tracking-widest uppercase bg-black text-white inline-block px-2 py-1 sm:px-4 sm:py-1 -rotate-2 border-2 border-transparent">
                   OFF HAUL
                 </div>
               </div>
@@ -260,93 +259,96 @@ export default function Home() {
       </section>
 
       {/* 2. RUNNING TEXT MARQUEE */}
-      <div className="bg-black text-white border-b-4 border-black py-4 overflow-hidden whitespace-nowrap select-none font-black uppercase text-xl sm:text-2xl tracking-widest flex">
-        <div className="animate-[marquee_25s_linear_infinite] flex shrink-0 gap-16 min-w-full">
+      <div className="bg-black text-white border-b-[3px] sm:border-b-4 border-black py-2 sm:py-4 flex overflow-hidden w-full whitespace-nowrap">
+        {/* We render two identical blocks side-by-side that translate left continuously */}
+        <div className="flex shrink-0 animate-marquee gap-6 sm:gap-16 px-3 sm:px-8 items-center font-black uppercase text-xs sm:text-2xl tracking-widest">
           <span>⚡ NEW ERA PRODUCTS DROP EVERY SUNDAY</span>
           <span>⚡ FREE GLOBAL SHIPPING OVER $100</span>
           <span>⚡ 100% SECURE CUSTOM PAYMENT NETWORKS</span>
         </div>
-        <div className="animate-[marquee_25s_linear_infinite] flex shrink-0 gap-16 min-w-full" aria-hidden="true">
+        <div aria-hidden="true" className="flex shrink-0 animate-marquee gap-6 sm:gap-16 px-3 sm:px-8 items-center font-black uppercase text-xs sm:text-2xl tracking-widest">
           <span>⚡ NEW ERA PRODUCTS DROP EVERY SUNDAY</span>
           <span>⚡ FREE GLOBAL SHIPPING OVER $100</span>
           <span>⚡ 100% SECURE CUSTOM PAYMENT NETWORKS</span>
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-6 sm:px-12 pt-16 space-y-24">
+      <div className="w-full mx-auto pt-12 sm:pt-16 space-y-16 sm:space-y-24 overflow-hidden sm:overflow-visible">
         
         {/* --- TRENDING SECTION --- */}
-        <section className="max-w-7xl mx-auto px-6 sm:px-12 mb-24">
-          <div className="flex items-center justify-between mb-8 border-b-8 border-black pb-4">
-            <div className="flex items-center gap-4">
-              <h2 className="text-4xl sm:text-5xl font-black uppercase tracking-tighter">
+        <section className="max-w-7xl mx-auto px-3 sm:px-12 w-full">
+          <div className="flex flex-wrap items-center justify-between gap-4 mb-6 sm:mb-8 border-b-[3px] sm:border-b-8 border-black pb-3 sm:pb-4">
+            <div className="flex items-center gap-2 sm:gap-4">
+              <h2 className="text-3xl sm:text-5xl font-black uppercase tracking-tighter">
                 Trending <span className="text-neo-accent">Now</span>
               </h2>
             </div>
             <Link 
               href="/trending" 
-              className="bg-neo-secondary text-black border-4 border-black px-4 py-2 font-black uppercase shadow-neo-sm hover:-translate-y-1 transition-transform"
+              className="bg-neo-secondary text-black border-[3px] sm:border-4 border-black px-3 py-1.5 sm:px-4 sm:py-2 text-xs sm:text-base font-black uppercase shadow-neo-sm hover:-translate-y-1 transition-transform"
             >
               View All
             </Link>
           </div>
-          <div className="flex overflow-x-auto snap-x snap-mandatory gap-3 sm:gap-8 pb-4 brutal-scroll">
-            {trending.map((item, i) => (
-              <div key={item._id} className="snap-start shrink-0 w-40 sm:w-80">
-                {renderProductCard(item, i)}
-              </div>
-            ))}
+
+          {/* Clean 2-column mobile grid mapping */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-2 sm:gap-6 w-full min-w-0">
+            {trending.slice(0, 4).map((item, i) => renderProductCard(item, i))}
           </div>
         </section>
 
         {/* --- ON SALE SECTION --- */}
         {sale.length > 0 && (
-          <section className="max-w-7xl mx-auto px-6 sm:px-12 mb-24">
-            <div className="flex items-center justify-between mb-8 border-b-8 border-black pb-4">
-              <div className="flex items-center gap-4">
-                <Tag className="h-10 w-10 fill-red-500 text-red-500" />
-                <h2 className="text-4xl sm:text-5xl font-black uppercase tracking-tighter">
+          <section className="max-w-7xl mx-auto px-3 sm:px-12 w-full">
+            <div className="flex flex-wrap items-center justify-between gap-4 mb-6 sm:mb-8 border-b-[3px] sm:border-b-8 border-black pb-3 sm:pb-4">
+              <div className="flex items-center gap-2 sm:gap-4">
+                <Tag className="h-6 w-6 sm:h-10 sm:w-10 fill-red-500 text-red-500" />
+                <h2 className="text-3xl sm:text-5xl font-black uppercase tracking-tighter">
                   ON <span className="text-red-500">Sale</span>
                 </h2>
               </div>
               <Link 
                 href="/onsale" 
-                className="bg-red-500 text-white border-4 border-black px-4 py-2 font-black uppercase shadow-neo-sm hover:-translate-y-1 transition-transform"
+                className="bg-red-500 text-white border-[3px] sm:border-4 border-black px-3 py-1.5 sm:px-4 sm:py-2 text-xs sm:text-base font-black uppercase shadow-neo-sm hover:-translate-y-1 transition-transform"
               >
                 View All
               </Link>
             </div>
-            <div className="flex overflow-x-auto snap-x snap-mandatory gap-3 sm:gap-8 pb-8 brutal-scroll">
-              {sale.map((product, i) => (
-                <div key={product._id} className="snap-start shrink-0 w-40 sm:w-80">
-                  {renderProductCard(product, i)}
-                </div>
-              ))}
+            
+            {/* Clean 2-column mobile grid mapping */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 sm:gap-6 w-full min-w-0">
+              {sale.slice(0, 4).map((product, i) => renderProductCard(product, i))}
             </div>
           </section>
         )}
 
         {/* 3. MAIN CATALOG & DYNAMIC CONTROLS */}
-        <section id="catalog">
-          <div className="flex items-center gap-4 mb-8">
-            <h2 className="text-5xl font-black uppercase tracking-tighter">Full Inventory</h2>
+        {/* FIX: Wrapped entire section in w-full, max-w-7xl, and applied responsive horizontal padding (px-4 to px-12) */}
+        <section id="catalog" className="max-w-7xl mx-auto px-4 sm:px-12 w-full mb-12 sm:mb-24">
+          
+          <div className="flex items-center gap-2 sm:gap-4 mb-6 sm:mb-8 border-b-[3px] sm:border-b-8 border-black pb-3 sm:pb-4">
+            <h2 className="text-3xl sm:text-5xl font-black uppercase tracking-tighter">Full Inventory</h2>
           </div>
 
           {/* INTERACTIVE CONTROLS BAR */}
-          <div className="bg-white border-4 border-black p-6 shadow-neo-md mb-12 flex flex-col lg:flex-row gap-6 justify-between items-stretch lg:items-center">
-            <div className="relative flex-grow max-w-xl">
-              <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none">
-                <Search className="h-6 w-6 stroke-[3px] text-black" />
+          {/* FIX: Responsive internal padding (p-3), margins (mb-8), and border thickness for mobile */}
+          <div className="bg-white border-[3px] sm:border-4 border-black p-3 sm:p-6 shadow-neo-sm sm:shadow-neo-md mb-8 sm:mb-12 flex flex-col lg:flex-row gap-4 sm:gap-6 justify-between items-stretch lg:items-center w-full">
+            
+            <div className="relative flex-grow max-w-xl w-full">
+              <div className="absolute inset-y-0 left-3 sm:left-4 flex items-center pointer-events-none">
+                <Search className="h-4 w-4 sm:h-6 w-6 stroke-[3px] text-black" />
               </div>
+              {/* FIX: Shrunk input height and text size specifically for mobile screens */}
               <Input 
                 type="text" 
                 placeholder="SEARCH SYSTEM INVENTORY..." 
-                className="pl-12 font-bold uppercase" 
+                className="pl-10 sm:pl-12 font-bold uppercase border-[2px] sm:border-4 border-black h-10 sm:h-12 text-xs sm:text-sm rounded-none focus-visible:ring-0 focus-visible:ring-offset-0 w-full" 
                 value={searchQuery} 
                 onChange={(e) => setSearchQuery(e.target.value)} 
               />
             </div>
-            <div className="flex flex-wrap items-center gap-3">
+
+            <div className="flex flex-wrap items-center gap-2 sm:gap-3">
               <div className="bg-black text-white p-2 border-2 border-black hidden xl:block">
                 <SlidersHorizontal className="h-5 w-5 stroke-[3px]" />
               </div>
@@ -354,7 +356,12 @@ export default function Home() {
                 <button
                   key={cat}
                   onClick={() => setSelectedCategory(cat)}
-                  className={`border-4 border-black px-4 py-2 font-black text-sm uppercase tracking-wide transition-all duration-100 ${selectedCategory === cat ? "bg-neo-secondary shadow-none translate-x-[2px] translate-y-[2px]" : "bg-white shadow-neo-sm hover:bg-neo-bg active:translate-x-[2px] active:translate-y-[2px] active:shadow-none"}`}
+                  // FIX: Reduced padding and font-size (text-[10px]) so filter buttons fit cleanly side-by-side on mobile
+                  className={`border-[2px] sm:border-4 border-black px-2 py-1.5 sm:px-4 sm:py-2 font-black text-[10px] sm:text-sm uppercase tracking-wide transition-all duration-100 ${
+                    selectedCategory === cat 
+                      ? "bg-neo-secondary shadow-none translate-x-[2px] translate-y-[2px]" 
+                      : "bg-white shadow-neo-sm hover:bg-neo-bg active:translate-x-[2px] active:translate-y-[2px] active:shadow-none"
+                  }`}
                 >
                   {cat}
                 </button>
@@ -364,30 +371,33 @@ export default function Home() {
 
           {/* INVENTORY MAPPING (No Loading Flash!) */}
           {initialBoot ? (
-            <div className="text-center py-24 bg-white border-4 border-black max-w-md mx-auto shadow-neo-md rotate-1">
-              <div className="text-4xl font-black uppercase tracking-tighter animate-pulse">SYNCHRONIZING...</div>
+            <div className="text-center py-16 sm:py-24 bg-white border-[3px] sm:border-4 border-black max-w-[280px] sm:max-w-md mx-auto shadow-neo-md rotate-1">
+              <div className="text-2xl sm:text-4xl font-black uppercase tracking-tighter animate-pulse">SYNCHRONIZING...</div>
             </div>
           ) : (
             <>
-              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-8">
+              {/* FIX: The grid now perfectly aligns with the search bar above it, strictly enforcing 2 columns on mobile */}
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-8 w-full min-w-0">
                 {products.map((product, i) => renderProductCard(product, i))}
               </div>
 
               {/* NULL DISCOVERY VALUE BLOCK */}
               {products.length === 0 && (
-                <div className="text-center py-20 bg-white border-4 border-black max-w-xl mx-auto shadow-neo-md rotate-[-1deg] mt-8">
-                  <p className="font-black text-2xl uppercase">NO MATCHES FOUND IN SYSTEM</p>
-                  <p className="font-bold text-black/60 uppercase text-sm mt-2">Try tuning down the variables or query string.</p>
+                <div className="text-center py-12 sm:py-20 bg-white border-[3px] sm:border-4 border-black w-full max-w-xl mx-auto shadow-neo-md rotate-[-1deg] mt-8">
+                  <p className="font-black text-lg sm:text-2xl uppercase px-4">NO MATCHES FOUND IN SYSTEM</p>
+                  <p className="font-bold text-black/60 uppercase text-xs sm:text-sm mt-2 px-4">Try tuning down the variables or query string.</p>
                 </div>
               )}
 
               {/* PAGINATION COMPONENT */}
               {pages > 1 && (
-                <Pagination 
-                  pages={pages} 
-                  page={page} 
-                  onPageChange={setCurrentPage} 
-                />
+                <div className="mt-8 sm:mt-12 flex justify-center w-full">
+                  <Pagination 
+                    pages={pages} 
+                    page={page} 
+                    onPageChange={setCurrentPage} 
+                  />
+                </div>
               )}
             </>
           )}
@@ -411,6 +421,13 @@ export default function Home() {
         }
         .brutal-scroll::-webkit-scrollbar-thumb:hover {
           background: #ef4444; /* red-500 */
+        }
+          @keyframes marquee {
+          0% { transform: translateX(0%); }
+          100% { transform: translateX(-100%); }
+        }
+        .animate-marquee {
+          animation: marquee 20s linear infinite;
         }
       `}</style>
     </main>
