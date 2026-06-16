@@ -43,9 +43,9 @@ Plaintext
 
 🏗 Setup Instructions
 
-    Clone the repository:
-
-git clone https://github.com/SIVAKUMAR1267/e-commerce.git
+1. **Clone the repository:**
+    ```bash
+    git clone https://github.com/SIVAKUMAR1267/e-commerce.git
 
 2. **Configure Environment Variables:**
    Create a `.env` file in both `frontend` and `backend` directories with the following:
@@ -54,15 +54,15 @@ git clone https://github.com/SIVAKUMAR1267/e-commerce.git
    * `NEXT_PUBLIC_API_URL`
 3. **Run the Backend:**
    ```bash
-cd backend
-npm install
-npm run dev
+        cd backend
+        npm install
+        npm run dev
 
-    Run the Frontend:
+4. **Run the Frontend:**
 
-cd frontend
-npm install
-npm run dev
+        cd frontend
+        npm install
+        npm run dev
 
 
 ---
