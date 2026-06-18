@@ -1,7 +1,7 @@
-Unfiltered Streetwear // E-Commerce Platform
+# Unfiltered Streetwear // E-Commerce Platform #
 
 A high-performance, full-stack e-commerce application designed with a Neo-Brutalist aesthetic. Built for speed, security, and scalability, featuring a dynamic inventory system and real-time administrative controls.
-🚀 Live Demo
+[🚀 Live Demo](https://e-commerce-chi-three-54.vercel.app/)
 
 Access the Deployment
 🛠 Tech Stack
